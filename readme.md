@@ -40,7 +40,7 @@ await setTerminalDefaultProfile('One Light');
 
 ## Related
 
-- [auto-terminal-profile](https://github.com/ptrkcsk/auto-terminal-profile) – Automatically switch macOS Terminal’s profile (theme) based on the system-wide dark / light appearance mode
+- [auto-terminal-profile](https://github.com/patrik-csak/auto-terminal-profile) – Automatically switch macOS Terminal’s profile (theme) based on the system-wide dark / light appearance mode
 
 ## Acknowledgements
 
