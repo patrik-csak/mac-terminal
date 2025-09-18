@@ -1,7 +1,7 @@
 {
-  "name": "terminal-profile",
+  "name": "mac-terminal",
   "version": "3.0.0",
-  "description": "Manage macOS terminal profile (theme)",
+  "description": "Manage macOS Terminal.app with Node.js",
   "keywords": [
     "macos",
     "terminal",
@@ -10,7 +10,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/patrik-csak/terminal-profile.git"
+    "url": "git+https://github.com/patrik-csak/mac-terminal.git"
   },
   "license": "MIT",
   "author": "Patrik Csak <p@trikcsak.com>",
