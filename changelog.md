@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased](https://github.com/patrik-csak/mac-terminal/compare/v3.0.0...HEAD)
 
+### Added
+
+- [`getTerminalProfiles()`](readme.md#getterminalprofiles)
+- [`isTerminalRunning()`](readme.md#isterminalrunning)
+
 ### Changed
 
 - **BREAKING**: Renamed package from `terminal-profile` to `mac-terminal`
+- **BREAKING**: New API for [`setTerminalProfile()`](readme.md#setterminalprofile)
 
 ## [3.0.0](https://github.com/patrik-csak/mac-terminal/compare/v2.0.0...v3.0.0) – 2025-05-27
 

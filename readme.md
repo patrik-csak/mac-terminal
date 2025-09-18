@@ -1,6 +1,6 @@
-# `mac-terminal`
+# mac-terminal
 
-Node.js library for managing [Apple’s macOS Terminal.app](https://en.wikipedia.org/wiki/Terminal_(macOS))
+Control the [macOS Terminal app](<https://en.wikipedia.org/wiki/Terminal_(macOS)>) with Node.js
 
 ## Install
 
@@ -10,18 +10,60 @@ npm install mac-terminal
 
 ## API
 
+### `getTerminalProfiles()`
+
+```typescript
+function getTerminalProfiles(): Promise<string[]>;
+```
+
+Get a list of installed Terminal profiles
+
+#### Example
+
+```js
+import {getTerminalProfiles} from 'mac-terminal';
+
+await getTerminalProfiles(); // ['Basic', 'Clear Dark', 'Clear Light', ...]
+```
+
+### `isTerminalRunning()`
+
+```typescript
+function isTerminalRunning(): Promise<boolean>;
+```
+
+Determine whether Terminal is currently running
+
+#### Example
+
+```js
+import {isTerminalRunning} from 'mac-terminal';
+
+await isTerminalRunning(); // true
+```
+
 ### `setTerminalProfile()`
 
 ```typescript
-function setTerminalProfile(profile: string): Promise<void>;
+function setTerminalProfile({
+	profile: string,
+	setDefault?: boolean = false
+}): Promise<void>;
 ```
 
-Update all of Terminal’s windows and tabs to the `profile` profile
+Update all open Terminal tabs to the given profile
+
+#### Examples
 
 ```javascript
 import {setTerminalProfile} from 'mac-terminal';
 
-await setTerminalProfile('One Dark');
+await setTerminalProfile({profile: 'Clear Dark'});
+
+await setTerminalProfile({
+	profile: 'Clear Dark',
+	setDefault: true, // Also set as the default profile
+});
 ```
 
 ### `setTerminalDefaultProfile()`
@@ -30,17 +72,19 @@ await setTerminalProfile('One Dark');
 function setTerminalDefaultProfile(profile: string): Promise<void>;
 ```
 
-Update Terminal’s default profile to `profile`
+Set the default Terminal profile for new windows / tabs
+
+#### Example
 
 ```javascript
 import {setTerminalDefaultProfile} from 'mac-terminal';
 
-await setTerminalDefaultProfile('One Light');
+await setTerminalDefaultProfile('Clear Dark');
 ```
 
 ## Related
 
-- [auto-terminal-profile](https://github.com/patrik-csak/auto-terminal-profile) – Automatically switch macOS Terminal’s profile (theme) based on the system-wide dark / light appearance mode
+- [auto-terminal-profile](https://github.com/patrik-csak/auto-terminal-profile) – Automatically switch macOS Terminal’s profile when the system-wide dark / light appearance mode changes
 
 ## Acknowledgements
 

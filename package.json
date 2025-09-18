@@ -25,6 +25,9 @@
     "test": "eslint && npm run prettier -- --check && sort-package-json --check"
   },
   "dependencies": {
+    "alpha-sort": "^5.0.0",
+    "ow": "^3.0.0",
+    "ps-list": "^8.1.1",
     "run-applescript": "^7.0.0"
   },
   "devDependencies": {
