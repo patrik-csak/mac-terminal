@@ -1,4 +1,7 @@
+import os from 'node:os';
 import alphaSort from 'alpha-sort';
+import bplist from 'bplist-parser';
+import {$} from 'execa';
 import ow from 'ow';
 import psList from 'ps-list';
 import {runAppleScript} from 'run-applescript';
@@ -7,14 +10,12 @@ import {runAppleScript} from 'run-applescript';
  * @returns {Promise<string[]>} - List of installed Terminal.app profiles
  */
 export async function getTerminalProfiles() {
-	const result = await runAppleScript(`set text item delimiters to linefeed
-tell application "Terminal"
-    return (name of every settings set) as string
-end tell`);
+	const terminalPlistPath = `${os.homedir()}/Library/Preferences/com.apple.Terminal.plist`;
+	const terminalPreferences = await bplist.parseFile(terminalPlistPath);
 
-	return result
-		.split('\n')
-		.sort(alphaSort({caseInsensitive: true, natural: true}));
+	return Object.keys(terminalPreferences[0]['Window Settings']).sort(
+		alphaSort({caseInsensitive: true, natural: true}),
+	);
 }
 
 /**
@@ -37,18 +38,17 @@ export async function isTerminalRunning() {
  * @return {Promise<void>}
  */
 export async function setTerminalProfile({profile, setDefault}) {
-	const terminalProfiles = await getTerminalProfiles();
+	ow(profile, ow.string.oneOf(await getTerminalProfiles()));
 
-	ow(profile, ow.string.oneOf(terminalProfiles));
-	ow(setDefault, ow.optional.boolean);
-
-	let appleScript = getSetTerminalWindowsProfileAppleScript(profile);
-
-	if (setDefault) {
-		appleScript += '\n' + getSetTerminalDefaultProfileAppleScript(profile);
+	if (await isTerminalRunning()) {
+		await runAppleScript(`tell application "Terminal"
+	set current settings of tabs of windows to settings set "${profile}"
+end tell`);
 	}
 
-	await runAppleScript(appleScript);
+	if (setDefault) {
+		await setTerminalDefaultProfile(profile);
+	}
 }
 
 /**
@@ -58,35 +58,14 @@ export async function setTerminalProfile({profile, setDefault}) {
  * @return {Promise<void>}
  */
 export async function setTerminalDefaultProfile(profile) {
-	const terminalProfiles = await getTerminalProfiles();
+	ow(profile, ow.string.oneOf(await getTerminalProfiles()));
 
-	ow(profile, ow.string.oneOf(terminalProfiles));
-
-	const appleScript = getSetTerminalDefaultProfileAppleScript(profile);
-
-	await runAppleScript(appleScript);
-}
-
-/**
- * Get the AppleScript to set the profile for all open Terminal.app windows
- *
- * @param {string} profile
- * @returns {string}
- */
-function getSetTerminalWindowsProfileAppleScript(profile) {
-	return `tell application "Terminal"
-	set current settings of tabs of windows to settings set "${profile}"
-end tell`;
-}
-
-/**
- * Get the AppleScript to set the default profile for new Terminal.app windows
- *
- * @param {string} profile
- * @returns {string}
- */
-function getSetTerminalDefaultProfileAppleScript(profile) {
-	return `tell application "Terminal"
+	if (await isTerminalRunning()) {
+		await runAppleScript(`tell application "Terminal"
 	set default settings to settings set "${profile}"
-end tell`;
+end tell`);
+	} else {
+		await $`defaults write com.apple.Terminal Default\ Window\ Settings -string ${profile}`;
+		await $`defaults write com.apple.Terminal Startup\ Window\ Settings -string ${profile}`;
+	}
 }
