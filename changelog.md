@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased](https://github.com/patrik-csak/mac-terminal/compare/v4.0.0...HEAD)
 
+### Added
+
+- [`getTerminalDefaultProfile()`](readme.md#getterminaldefaultprofile)
+
 ### Changed
 
 - **BREAKING**: `setTerminalProfile()` only tries to update Terminal windows if Terminal is running

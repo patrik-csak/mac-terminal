@@ -10,6 +10,20 @@ npm install mac-terminal
 
 ## API
 
+### `getTerminalDefaultProfile()`
+
+```typescript
+function getTerminalDefaultProfile(): Promise<string>;
+```
+
+#### Example
+
+```javascript
+import {getTerminalDefaultProfile} from 'mac-terminal';
+
+await getTerminalDefaultProfile(); // 'Clear Dark'
+```
+
 ### `getTerminalProfiles()`
 
 ```typescript
@@ -20,7 +34,7 @@ Get a list of installed Terminal profiles
 
 #### Example
 
-```js
+```javascript
 import {getTerminalProfiles} from 'mac-terminal';
 
 await getTerminalProfiles(); // ['Basic', 'Clear Dark', 'Clear Light', ...]
@@ -40,6 +54,22 @@ Determine whether Terminal is currently running
 import {isTerminalRunning} from 'mac-terminal';
 
 await isTerminalRunning(); // true
+```
+
+### `setTerminalDefaultProfile()`
+
+```typescript
+function setTerminalDefaultProfile(profile: string): Promise<void>;
+```
+
+Set the default Terminal profile for new windows / tabs
+
+#### Example
+
+```javascript
+import {setTerminalDefaultProfile} from 'mac-terminal';
+
+await setTerminalDefaultProfile('Clear Dark');
 ```
 
 ### `setTerminalProfile()`
@@ -66,26 +96,6 @@ await setTerminalProfile({
 });
 ```
 
-### `setTerminalDefaultProfile()`
-
-```typescript
-function setTerminalDefaultProfile(profile: string): Promise<void>;
-```
-
-Set the default Terminal profile for new windows / tabs
-
-#### Example
-
-```javascript
-import {setTerminalDefaultProfile} from 'mac-terminal';
-
-await setTerminalDefaultProfile('Clear Dark');
-```
-
 ## Related
 
-- [auto-terminal-profile](https://github.com/patrik-csak/auto-terminal-profile) – Automatically switch macOS Terminal’s profile when the system-wide dark / light appearance mode changes
-
-## Acknowledgements
-
-Thanks to [Jimmy Bosse](https://github.com/jbosse) for his [Stack Overflow answer](https://stackoverflow.com/a/66080297/4411309)
+- [auto-terminal-profile](https://github.com/patrik-csak/auto-terminal-profile) – Automatically switch Terminal profiles when macOS dark/light mode changes
