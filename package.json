@@ -2,7 +2,10 @@
   "name": "mac-terminal",
   "version": "4.0.0",
   "description": "Control the macOS Terminal app",
-  "repository": "github:patrik-csak/mac-terminal.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/patrik-csak/mac-terminal.git"
+  },
   "license": "MIT",
   "author": "Patrik Csak <p@trikcsak.com>",
   "type": "module",
