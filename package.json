@@ -27,7 +27,6 @@
     "unused:check": "knip"
   },
   "dependencies": {
-    "alpha-sort": "^5.0.0",
     "bplist-parser": "^0.3.2",
     "execa": "^9.6.0",
     "ow": "^3.0.0",

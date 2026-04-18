@@ -1,5 +1,4 @@
 import os from 'node:os';
-import alphaSort from 'alpha-sort';
 import bplist from 'bplist-parser';
 import {$} from 'execa';
 import ow from 'ow';
@@ -28,8 +27,8 @@ export async function getTerminalProfiles() {
 	const terminalPlistPath = `${os.homedir()}/Library/Preferences/com.apple.Terminal.plist`;
 	const terminalPreferences = await bplist.parseFile(terminalPlistPath);
 
-	return Object.keys(terminalPreferences[0]['Window Settings']).sort(
-		alphaSort({caseInsensitive: true, natural: true}),
+	return Object.keys(terminalPreferences[0]['Window Settings']).toSorted(
+		new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'}).compare,
 	);
 }
 
