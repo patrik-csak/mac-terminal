@@ -1,9 +1,12 @@
+import {execFile} from 'node:child_process';
 import os from 'node:os';
+import {promisify} from 'node:util';
 import bplist from 'bplist-parser';
-import {$} from 'execa';
 import ow from 'ow';
 import psList from 'ps-list';
 import {runAppleScript} from 'run-applescript';
+
+const execute = promisify(execFile);
 
 /**
  * @returns {Promise<string>} - The name of the default profile
@@ -15,8 +18,12 @@ export async function getTerminalDefaultProfile() {
 		);
 	}
 
-	const {stdout} =
-		await $`defaults read com.apple.Terminal Default\ Window\ Settings`;
+	const {stdout} = await execute('defaults', [
+		'read',
+		'com.apple.Terminal',
+		'Default Window Settings',
+	]);
+
 	return stdout.trim();
 }
 
@@ -55,8 +62,20 @@ export async function setTerminalDefaultProfile(profile) {
 	set default settings to settings set "${profile}"
 end tell`);
 	} else {
-		await $`defaults write com.apple.Terminal Default\ Window\ Settings -string ${profile}`;
-		await $`defaults write com.apple.Terminal Startup\ Window\ Settings -string ${profile}`;
+		await execute('defaults', [
+			'write',
+			'com.apple.Terminal',
+			'Default Window Settings',
+			'-string',
+			profile,
+		]);
+		await execute('defaults', [
+			'write',
+			'com.apple.Terminal',
+			'Startup Window Settings',
+			'-string',
+			profile,
+		]);
 	}
 }
 
