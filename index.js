@@ -2,7 +2,6 @@ import {execFile} from 'node:child_process';
 import os from 'node:os';
 import {promisify} from 'node:util';
 import bplist from 'bplist-parser';
-import psList from 'ps-list';
 import {runAppleScript} from 'run-applescript';
 
 const execute = promisify(execFile);
@@ -42,9 +41,12 @@ export async function getTerminalProfiles() {
  * @returns {Promise<boolean>} - Whether Terminal is currently running
  */
 export async function isTerminalRunning() {
-	const processes = await psList();
-
-	return processes.some((process) => process.name === 'Terminal');
+	try {
+		await execute('pgrep', ['-x', 'Terminal']);
+		return true;
+	} catch {
+		return false;
+	}
 }
 
 /**
