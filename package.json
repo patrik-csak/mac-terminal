@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "bplist-parser": "^0.3.2",
-    "ow": "^3.0.0",
     "ps-list": "^9.0.0",
     "run-applescript": "^7.0.0"
   },

@@ -2,7 +2,6 @@ import {execFile} from 'node:child_process';
 import os from 'node:os';
 import {promisify} from 'node:util';
 import bplist from 'bplist-parser';
-import ow from 'ow';
 import psList from 'ps-list';
 import {runAppleScript} from 'run-applescript';
 
@@ -55,8 +54,6 @@ export async function isTerminalRunning() {
  * @return {Promise<void>}
  */
 export async function setTerminalDefaultProfile(profile) {
-	ow(profile, ow.string.oneOf(await getTerminalProfiles()));
-
 	if (await isTerminalRunning()) {
 		await runAppleScript(`tell application "Terminal"
 	set default settings to settings set "${profile}"
@@ -90,8 +87,6 @@ end tell`);
  * @return {Promise<void>}
  */
 export async function setTerminalProfile({profile, setDefault}) {
-	ow(profile, ow.string.oneOf(await getTerminalProfiles()));
-
 	if (await isTerminalRunning()) {
 		await runAppleScript(`tell application "Terminal"
 	set current settings of tabs of windows to settings set "${profile}"
