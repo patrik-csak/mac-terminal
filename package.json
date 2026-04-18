@@ -10,10 +10,10 @@
   "author": "Patrik Csak <p@trikcsak.com>",
   "type": "module",
   "exports": {
-    ".": "./index.js"
+    ".": "./source/index.js"
   },
   "files": [
-    "index.js"
+    "source"
   ],
   "scripts": {
     "_eslint": "eslint --cache --cache-strategy=content",
