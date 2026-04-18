@@ -18,6 +18,7 @@ export default defineConfig([
 		extends: [packageJson.configs.recommended, packageJson.configs.stylistic],
 		rules: {
 			'package-json/require-sideEffects': 'off',
+			'package-json/scripts-name-casing': 'off',
 		},
 	},
 ]);
