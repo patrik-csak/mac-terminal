@@ -1,0 +1,56 @@
+import {beforeEach, describe, it, mock} from 'node:test';
+import assert from 'node:assert/strict';
+
+const os = {homedir: mock.fn(() => '/home')};
+mock.module('node:os', {namedExports: os, defaultExport: os});
+
+const bplistParser = {parseFile: mock.fn()};
+mock.module('bplist-parser', {namedExports: bplistParser});
+
+const {default: getTerminalProfiles} =
+	await import('../source/get-terminal-profiles.js');
+
+describe('getTerminalProfiles', () => {
+	beforeEach(() => {
+		bplistParser.parseFile.mock.resetCalls();
+	});
+
+	it('returns sorted profile names', async () => {
+		bplistParser.parseFile.mock.mockImplementation(async () => [
+			{'Window Settings': {'Light Profile': {}, 'Dark Profile': {}}},
+		]);
+
+		const profiles = await getTerminalProfiles();
+
+		assert.deepEqual(profiles, ['Dark Profile', 'Light Profile']);
+	});
+
+	it('sorts numerically', async () => {
+		bplistParser.parseFile.mock.mockImplementation(async () => [
+			{
+				'Window Settings': {
+					'Profile 10': {},
+					'Profile 2': {},
+					'Profile 1': {},
+				},
+			},
+		]);
+
+		const profiles = await getTerminalProfiles();
+
+		assert.deepEqual(profiles, ['Profile 1', 'Profile 2', 'Profile 10']);
+	});
+
+	it('reads the correct plist path', async () => {
+		bplistParser.parseFile.mock.mockImplementation(async () => [
+			{'Window Settings': {}},
+		]);
+
+		await getTerminalProfiles();
+
+		assert.equal(
+			bplistParser.parseFile.mock.calls[0].arguments[0],
+			'/home/Library/Preferences/com.apple.Terminal.plist',
+		);
+	});
+});
