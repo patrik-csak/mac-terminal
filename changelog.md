@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **BREAKING**: Update minimum supported Node.js version from 20 to 22
 - Updated and removed dependencies
 
 ## [5.0.0](https://github.com/patrik-csak/mac-terminal/compare/v4.0.0...v5.0.0) – 2025-09-12
