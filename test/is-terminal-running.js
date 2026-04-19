@@ -25,11 +25,24 @@ describe('isTerminalRunning', () => {
 	it('returns false when Terminal is not running', async () => {
 		childProcess.execFile.mock.mockImplementation(
 			(_command, _args, callback) => {
-				callback(new Error('no process found'));
+				const error = new Error('no process found');
+				error.code = 1;
+				callback(error);
 			},
 		);
 
 		assert.equal(await isTerminalRunning(), false);
+
+	it('rethrows unexpected pgrep failures', async () => {
+		const error = new Error('spawn pgrep ENOENT');
+		error.code = 'ENOENT';
+		childProcess.execFile.mock.mockImplementation(
+			(_command, _args, callback) => {
+				callback(error);
+			},
+		);
+
+		await assert.rejects(isTerminalRunning(), error);
 	});
 
 	it('calls pgrep with correct arguments', async () => {
