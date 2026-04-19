@@ -7,7 +7,7 @@
     "url": "git+https://github.com/patrik-csak/mac-terminal.git"
   },
   "license": "MIT",
-  "author": "Patrik Csak <p@trikcsak.com>",
+  "author": "Patrik Csak <p@trikcsak.com> (https://patrikcsak.com)",
   "type": "module",
   "exports": {
     ".": "./source/index.js"
