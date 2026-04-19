@@ -1,6 +1,7 @@
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 import {runAppleScript} from 'run-applescript';
+import assertTerminalProfile from './assert-terminal-profile.js';
 import isTerminalRunning from './is-terminal-running.js';
 
 const execute = promisify(execFile);
@@ -12,6 +13,8 @@ const execute = promisify(execFile);
  * @return {Promise<void>}
  */
 export default async function setTerminalDefaultProfile(profile) {
+	await assertTerminalProfile(profile);
+
 	if (await isTerminalRunning()) {
 		await runAppleScript(`tell application "Terminal"
 	set default settings to settings set "${profile}"

@@ -32,6 +32,7 @@ describe('isTerminalRunning', () => {
 		);
 
 		assert.equal(await isTerminalRunning(), false);
+	});
 
 	it('rethrows unexpected pgrep failures', async () => {
 		const error = new Error('spawn pgrep ENOENT');

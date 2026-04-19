@@ -1,11 +1,17 @@
 import {beforeEach, describe, it, mock} from 'node:test';
 import assert from 'node:assert/strict';
+import {ArgumentError} from 'ow';
 
 const childProcess = {execFile: mock.fn()};
 mock.module('node:child_process', {namedExports: childProcess});
 
 const runAppleScript = mock.fn();
 mock.module('run-applescript', {namedExports: {runAppleScript}});
+
+const assertTerminalProfile = mock.fn();
+mock.module('../source/assert-terminal-profile.js', {
+	defaultExport: assertTerminalProfile,
+});
 
 const isTerminalRunning = mock.fn();
 mock.module('../source/is-terminal-running.js', {
@@ -19,10 +25,12 @@ describe('setTerminalDefaultProfile', () => {
 	beforeEach(() => {
 		childProcess.execFile.mock.resetCalls();
 		runAppleScript.mock.resetCalls();
+		assertTerminalProfile.mock.resetCalls();
 		isTerminalRunning.mock.resetCalls();
 	});
 
 	it('uses AppleScript when Terminal is running', async () => {
+		assertTerminalProfile.mock.mockImplementation(async () => undefined);
 		isTerminalRunning.mock.mockImplementation(async () => true);
 		runAppleScript.mock.mockImplementation(async () => undefined);
 
@@ -39,6 +47,7 @@ describe('setTerminalDefaultProfile', () => {
 	});
 
 	it('uses defaults command when Terminal is not running', async () => {
+		assertTerminalProfile.mock.mockImplementation(async () => undefined);
 		isTerminalRunning.mock.mockImplementation(async () => false);
 		childProcess.execFile.mock.mockImplementation(
 			(_command, _args, callback) => {
@@ -69,5 +78,19 @@ describe('setTerminalDefaultProfile', () => {
 			'-string',
 			'Profile',
 		]);
+	});
+
+	it('rejects an invalid profile before changing Terminal settings', async () => {
+		const error = new ArgumentError(
+			'Expected string to be one of `["Profile"]`, got `Missing Profile`',
+		);
+		assertTerminalProfile.mock.mockImplementation(async () => {
+			throw error;
+		});
+
+		await assert.rejects(setTerminalDefaultProfile('Missing Profile'), error);
+		assert.equal(isTerminalRunning.mock.callCount(), 0);
+		assert.equal(runAppleScript.mock.callCount(), 0);
+		assert.equal(childProcess.execFile.mock.callCount(), 0);
 	});
 });
