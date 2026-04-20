@@ -1,6 +1,6 @@
 {
   "name": "mac-terminal",
-  "version": "6.0.0",
+  "version": "6.1.0-0",
   "description": "Control the macOS Terminal app",
   "repository": {
     "type": "git",
