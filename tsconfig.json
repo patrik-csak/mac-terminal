@@ -1,0 +1,12 @@
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"declaration": true,
+		"emitDeclarationOnly": true,
+		"outDir": "types",
+		"rootDir": "source",
+		"skipLibCheck": true,
+		"strict": true
+	},
+	"include": ["source"]
+}

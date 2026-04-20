@@ -10,19 +10,25 @@
   "author": "Patrik Csak <p@trikcsak.com> (https://patrikcsak.com)",
   "type": "module",
   "exports": {
-    ".": "./source/index.js"
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./source/index.js"
+    }
   },
   "files": [
-    "source"
+    "source",
+    "types"
   ],
   "scripts": {
     "_eslint": "eslint --cache --cache-strategy=content",
     "_knip": "knip --cache",
     "_prettier": "prettier --cache .",
+    "build": "tsc",
     "format:check": "npm run _prettier -- --check",
     "format:fix": "npm run _prettier -- --write",
     "lint:check": "npm run _eslint",
     "lint:fix": "npm run _eslint -- --fix",
+    "prepack": "npm run build",
     "quality:check": "npm run format:check && npm run lint:check && npm run unused:check",
     "quality:fix": "npm run format:fix && npm run lint:fix && npm run unused:fix",
     "test": "node --experimental-test-module-mocks --test",
@@ -41,6 +47,7 @@
     "eslint-plugin-package-json": "^0.91.0",
     "knip": "^6.4.0",
     "prettier": "^3.5.3",
+    "typescript": "^6.0.2",
     "xo": "^2.0.2"
   },
   "engines": {
