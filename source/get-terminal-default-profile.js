@@ -1,6 +1,7 @@
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 import {runAppleScript} from 'run-applescript';
+
 import isTerminalRunning from './is-terminal-running.js';
 
 const execute = promisify(execFile);

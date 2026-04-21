@@ -1,5 +1,5 @@
-import {beforeEach, describe, it, mock} from 'node:test';
 import assert from 'node:assert/strict';
+import {beforeEach, describe, it, mock} from 'node:test';
 import {ArgumentError} from 'ow';
 
 const childProcess = {execFile: mock.fn()};
@@ -51,7 +51,7 @@ describe('setTerminalDefaultProfile', () => {
 		isTerminalRunning.mock.mockImplementation(async () => false);
 		childProcess.execFile.mock.mockImplementation(
 			(_command, _args, callback) => {
-				callback(null, {stdout: '', stderr: ''});
+				callback(null, {stderr: '', stdout: ''});
 			},
 		);
 

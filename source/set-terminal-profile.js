@@ -1,4 +1,5 @@
 import {runAppleScript} from 'run-applescript';
+
 import assertTerminalProfile from './assert-terminal-profile.js';
 import isTerminalRunning from './is-terminal-running.js';
 import setTerminalDefaultProfile from './set-terminal-default-profile.js';

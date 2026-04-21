@@ -1,8 +1,8 @@
-import {beforeEach, describe, it, mock} from 'node:test';
 import assert from 'node:assert/strict';
+import {beforeEach, describe, it, mock} from 'node:test';
 
 const os = {homedir: mock.fn(() => '/home')};
-mock.module('node:os', {namedExports: os, defaultExport: os});
+mock.module('node:os', {defaultExport: os, namedExports: os});
 
 const bplistParser = {parseFile: mock.fn()};
 mock.module('bplist-parser', {namedExports: bplistParser});
@@ -17,7 +17,7 @@ describe('getTerminalProfiles', () => {
 
 	it('returns sorted profile names', async () => {
 		bplistParser.parseFile.mock.mockImplementation(async () => [
-			{'Window Settings': {'Light Profile': {}, 'Dark Profile': {}}},
+			{'Window Settings': {'Dark Profile': {}, 'Light Profile': {}}},
 		]);
 
 		const profiles = await getTerminalProfiles();
@@ -29,9 +29,11 @@ describe('getTerminalProfiles', () => {
 		bplistParser.parseFile.mock.mockImplementation(async () => [
 			{
 				'Window Settings': {
+					/* eslint-disable perfectionist/sort-objects */
 					'Profile 10': {},
 					'Profile 2': {},
 					'Profile 1': {},
+					/* eslint-enable */
 				},
 			},
 		]);

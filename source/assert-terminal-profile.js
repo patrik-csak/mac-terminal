@@ -1,4 +1,5 @@
 import ow from 'ow';
+
 import getTerminalProfiles from './get-terminal-profiles.js';
 
 /**

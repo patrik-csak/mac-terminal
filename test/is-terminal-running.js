@@ -1,5 +1,5 @@
-import {beforeEach, describe, it, mock} from 'node:test';
 import assert from 'node:assert/strict';
+import {beforeEach, describe, it, mock} from 'node:test';
 
 const childProcess = {execFile: mock.fn()};
 mock.module('node:child_process', {namedExports: childProcess});
@@ -15,7 +15,7 @@ describe('isTerminalRunning', () => {
 	it('returns true when Terminal is running', async () => {
 		childProcess.execFile.mock.mockImplementation(
 			(_command, _args, callback) => {
-				callback(null, {stdout: '1234\n', stderr: ''});
+				callback(null, {stderr: '', stdout: '1234\n'});
 			},
 		);
 
@@ -49,7 +49,7 @@ describe('isTerminalRunning', () => {
 	it('calls pgrep with correct arguments', async () => {
 		childProcess.execFile.mock.mockImplementation(
 			(_command, _args, callback) => {
-				callback(null, {stdout: '', stderr: ''});
+				callback(null, {stderr: '', stdout: ''});
 			},
 		);
 
