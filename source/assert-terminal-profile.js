@@ -3,6 +3,7 @@ import ow from 'ow';
 import getTerminalProfiles from './get-terminal-profiles.js';
 
 /**
+ * @internal
  * @param {string} profile
  * @return {Promise<void>}
  */
