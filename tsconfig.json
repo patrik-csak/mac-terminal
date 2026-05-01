@@ -3,10 +3,12 @@
 		"allowJs": true,
 		"declaration": true,
 		"emitDeclarationOnly": true,
+		"incremental": true,
 		"outDir": "types",
 		"rootDir": "source",
 		"skipLibCheck": true,
-		"strict": true
+		"strict": true,
+		"stripInternal": true
 	},
 	"include": ["source"]
 }
