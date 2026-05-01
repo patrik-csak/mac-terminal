@@ -10,7 +10,17 @@ npm install mac-terminal
 
 ## API
 
+- [`getTerminalDefaultProfile`](#getterminaldefaultprofile)
+- [`getTerminalProfiles`](#getterminalprofiles)
+- [`isTerminalRunning`](#isterminalrunning)
+- [`setTerminalDefaultProfile`](#setterminaldefaultprofile)
+- [`setTerminalProfile`](#setterminalprofile)
+
 ### `getTerminalDefaultProfile()`
+
+Get the default Terminal profile
+
+#### Signature
 
 ```typescript
 function getTerminalDefaultProfile(): Promise<string>;
@@ -26,11 +36,13 @@ await getTerminalDefaultProfile(); // 'Clear Dark'
 
 ### `getTerminalProfiles()`
 
+Get the list of installed Terminal profiles
+
+#### Signature
+
 ```typescript
 function getTerminalProfiles(): Promise<string[]>;
 ```
-
-Get a list of installed Terminal profiles
 
 #### Example
 
@@ -42,11 +54,13 @@ await getTerminalProfiles(); // ['Basic', 'Clear Dark', 'Clear Light', ...]
 
 ### `isTerminalRunning()`
 
+Determine whether Terminal is currently running
+
+#### Signature
+
 ```typescript
 function isTerminalRunning(): Promise<boolean>;
 ```
-
-Determine whether Terminal is currently running
 
 #### Example
 
@@ -58,11 +72,13 @@ await isTerminalRunning(); // true
 
 ### `setTerminalDefaultProfile()`
 
+Update the default Terminal profile
+
+#### Signature
+
 ```typescript
 function setTerminalDefaultProfile(profile: string): Promise<void>;
 ```
-
-Set the default Terminal profile for new windows / tabs
 
 #### Example
 
@@ -74,14 +90,16 @@ await setTerminalDefaultProfile('Clear Dark');
 
 ### `setTerminalProfile()`
 
+Update the Terminal profile for all open tabs and windows, and optionally update the default profile at the same time
+
+#### Signature
+
 ```typescript
 function setTerminalProfile({
 	profile: string,
 	setDefault?: boolean = false
 }): Promise<void>;
 ```
-
-Update all open Terminal tabs to the given profile
 
 #### Examples
 
