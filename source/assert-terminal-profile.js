@@ -3,7 +3,6 @@ import getTerminalProfiles from './get-terminal-profiles.js';
 /**
  Assert that `profile` is a valid terminal profile
 
- @internal
  @param {string} profile - Terminal profile to validate
  @returns {Promise<void>}
  */
