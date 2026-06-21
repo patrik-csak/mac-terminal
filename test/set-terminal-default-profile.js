@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import {beforeEach, describe, it, mock} from 'node:test';
-import {ArgumentError} from 'ow';
 
 const childProcess = {execFile: mock.fn()};
 mock.module('node:child_process', {namedExports: childProcess});
@@ -81,7 +80,7 @@ describe('setTerminalDefaultProfile', () => {
 	});
 
 	it('rejects an invalid profile before changing Terminal settings', async () => {
-		const error = new ArgumentError(
+		const error = new Error(
 			'Expected string to be one of `["Profile"]`, got `Missing Profile`',
 		);
 		assertTerminalProfile.mock.mockImplementation(async () => {

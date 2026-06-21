@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import {beforeEach, describe, it, mock} from 'node:test';
-import {ArgumentError} from 'ow';
 
 const runAppleScript = mock.fn();
 mock.module('run-applescript', {namedExports: {runAppleScript}});
@@ -81,7 +80,7 @@ describe('setTerminalProfile', () => {
 	});
 
 	it('rejects an invalid profile before updating Terminal', async () => {
-		const error = new ArgumentError(
+		const error = new Error(
 			'Expected string to be one of `["Profile"]`, got `Missing Profile`',
 		);
 		assertTerminalProfile.mock.mockImplementation(async () => {

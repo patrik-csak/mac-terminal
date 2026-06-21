@@ -1,4 +1,3 @@
-import ow from 'ow';
 import getTerminalProfiles from './get-terminal-profiles.js';
 
 /**
@@ -9,5 +8,11 @@ import getTerminalProfiles from './get-terminal-profiles.js';
  @returns {Promise<void>}
  */
 export default async function assertTerminalProfile(profile) {
-	ow(profile, ow.string.oneOf(await getTerminalProfiles()));
+	const profiles = await getTerminalProfiles();
+
+	if (!profiles.includes(profile)) {
+		throw new Error(
+			`Expected string to be one of ${JSON.stringify(profiles)}, got \`${profile}\``,
+		);
+	}
 }
