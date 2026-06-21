@@ -10,8 +10,6 @@ export default async function assertTerminalProfile(profile) {
 	const profiles = await getTerminalProfiles();
 
 	if (!profiles.includes(profile)) {
-		throw new Error(
-			`Expected string to be one of ${JSON.stringify(profiles)}, got \`${profile}\``,
-		);
+		throw new Error(`Expected string to be one of ${JSON.stringify(profiles)}, got \`${profile}\``);
 	}
 }

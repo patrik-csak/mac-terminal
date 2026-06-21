@@ -8,10 +8,6 @@ const config = [
 		ignores: ['package-lock.json', 'types'],
 	},
 
-	{
-		prettier: 'compat',
-	},
-
 	packageJson.configs.recommended,
 	packageJson.configs.stylistic,
 	{

@@ -1,5 +1,10 @@
 import assert from 'node:assert/strict';
-import {beforeEach, describe, it, mock} from 'node:test';
+import {
+	beforeEach,
+	describe,
+	it,
+	mock,
+} from 'node:test';
 
 const childProcess = {execFile: mock.fn()};
 mock.module('node:child_process', {namedExports: childProcess});
@@ -17,8 +22,7 @@ mock.module('../source/is-terminal-running.js', {
 	defaultExport: isTerminalRunning,
 });
 
-const {default: setTerminalDefaultProfile} =
-	await import('../source/set-terminal-default-profile.js');
+const {default: setTerminalDefaultProfile} = await import('../source/set-terminal-default-profile.js');
 
 describe('setTerminalDefaultProfile', () => {
 	beforeEach(() => {
@@ -48,11 +52,9 @@ describe('setTerminalDefaultProfile', () => {
 	it('uses defaults command when Terminal is not running', async () => {
 		assertTerminalProfile.mock.mockImplementation(async () => undefined);
 		isTerminalRunning.mock.mockImplementation(async () => false);
-		childProcess.execFile.mock.mockImplementation(
-			(_command, _args, callback) => {
-				callback(null, {stderr: '', stdout: ''});
-			},
-		);
+		childProcess.execFile.mock.mockImplementation((_command, _args, callback) => {
+			callback(null, {stderr: '', stdout: ''});
+		});
 
 		await setTerminalDefaultProfile('Profile');
 
@@ -80,9 +82,7 @@ describe('setTerminalDefaultProfile', () => {
 	});
 
 	it('rejects an invalid profile before changing Terminal settings', async () => {
-		const error = new Error(
-			'Expected string to be one of `["Profile"]`, got `Missing Profile`',
-		);
+		const error = new Error('Expected string to be one of `["Profile"]`, got `Missing Profile`');
 		assertTerminalProfile.mock.mockImplementation(async () => {
 			throw error;
 		});

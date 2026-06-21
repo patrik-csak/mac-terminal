@@ -1,5 +1,10 @@
 import assert from 'node:assert/strict';
-import {beforeEach, describe, it, mock} from 'node:test';
+import {
+	beforeEach,
+	describe,
+	it,
+	mock,
+} from 'node:test';
 
 const childProcess = {execFile: mock.fn()};
 mock.module('node:child_process', {namedExports: childProcess});
@@ -12,8 +17,7 @@ mock.module('../source/is-terminal-running.js', {
 	defaultExport: isTerminalRunning,
 });
 
-const {default: getTerminalDefaultProfile} =
-	await import('../source/get-terminal-default-profile.js');
+const {default: getTerminalDefaultProfile} = await import('../source/get-terminal-default-profile.js');
 
 describe('getTerminalDefaultProfile', () => {
 	beforeEach(() => {
@@ -33,11 +37,9 @@ describe('getTerminalDefaultProfile', () => {
 
 	it('uses defaults command when Terminal is not running', async () => {
 		isTerminalRunning.mock.mockImplementation(async () => false);
-		childProcess.execFile.mock.mockImplementation(
-			(_command, _args, callback) => {
-				callback(null, {stderr: '', stdout: 'Profile\n'});
-			},
-		);
+		childProcess.execFile.mock.mockImplementation((_command, _args, callback) => {
+			callback(null, {stderr: '', stdout: 'Profile\n'});
+		});
 
 		const result = await getTerminalDefaultProfile();
 

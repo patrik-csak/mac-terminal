@@ -1,5 +1,10 @@
 import assert from 'node:assert/strict';
-import {beforeEach, describe, it, mock} from 'node:test';
+import {
+	beforeEach,
+	describe,
+	it,
+	mock,
+} from 'node:test';
 
 const os = {homedir: mock.fn(() => '/home')};
 mock.module('node:os', {defaultExport: os, namedExports: os});
@@ -7,8 +12,7 @@ mock.module('node:os', {defaultExport: os, namedExports: os});
 const bplistParser = {parseFile: mock.fn()};
 mock.module('bplist-parser', {namedExports: bplistParser});
 
-const {default: getTerminalProfiles} =
-	await import('../source/get-terminal-profiles.js');
+const {default: getTerminalProfiles} = await import('../source/get-terminal-profiles.js');
 
 describe('getTerminalProfiles', () => {
 	beforeEach(() => {

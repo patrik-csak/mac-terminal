@@ -1,5 +1,10 @@
 import assert from 'node:assert/strict';
-import {beforeEach, describe, it, mock} from 'node:test';
+import {
+	beforeEach,
+	describe,
+	it,
+	mock,
+} from 'node:test';
 
 const runAppleScript = mock.fn();
 mock.module('run-applescript', {namedExports: {runAppleScript}});
@@ -19,8 +24,7 @@ mock.module('../source/set-terminal-default-profile.js', {
 	defaultExport: setTerminalDefaultProfile,
 });
 
-const {default: setTerminalProfile} =
-	await import('../source/set-terminal-profile.js');
+const {default: setTerminalProfile} = await import('../source/set-terminal-profile.js');
 
 describe('setTerminalProfile', () => {
 	beforeEach(() => {
@@ -80,9 +84,7 @@ describe('setTerminalProfile', () => {
 	});
 
 	it('rejects an invalid profile before updating Terminal', async () => {
-		const error = new Error(
-			'Expected string to be one of `["Profile"]`, got `Missing Profile`',
-		);
+		const error = new Error('Expected string to be one of `["Profile"]`, got `Missing Profile`');
 		assertTerminalProfile.mock.mockImplementation(async () => {
 			throw error;
 		});

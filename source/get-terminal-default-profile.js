@@ -12,9 +12,7 @@ const execute = promisify(execFile);
  */
 export default async function getTerminalDefaultProfile() {
 	if (await isTerminalRunning()) {
-		return runAppleScript(
-			'tell application "Terminal" to get name of default settings',
-		);
+		return runAppleScript('tell application "Terminal" to get name of default settings');
 	}
 
 	const {stdout} = await execute('defaults', [

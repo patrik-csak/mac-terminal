@@ -9,8 +9,8 @@ Get the list of installed Terminal profiles
 export default async function getTerminalProfiles() {
 	const terminalPlistPath = `${os.homedir()}/Library/Preferences/com.apple.Terminal.plist`;
 	const terminalPreferences = await parsePlistFile(terminalPlistPath);
+	const profiles = Object.keys(terminalPreferences[0]['Window Settings']);
 
-	return Object.keys(terminalPreferences[0]['Window Settings']).toSorted(
-		new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'}).compare,
-	);
+	return profiles
+		.toSorted(new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'}).compare);
 }
