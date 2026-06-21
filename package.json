@@ -40,12 +40,12 @@
     "run-applescript": "^7.0.0"
   },
   "devDependencies": {
-    "eslint": "^10.0.3",
-    "eslint-plugin-package-json": "^0.91.0",
+    "eslint": "^10.5.0",
+    "eslint-plugin-package-json": "^1.4.0",
     "knip": "^6.4.0",
     "prettier": "^3.5.3",
     "typescript": "^6.0.3",
-    "xo": "^2.0.2"
+    "xo": "^3.0.2"
   },
   "engines": {
     "node": ">=22 <=24"
