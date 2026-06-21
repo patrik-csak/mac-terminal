@@ -3,7 +3,6 @@
 		"allowJs": true,
 		"declaration": true,
 		"emitDeclarationOnly": true,
-		"incremental": true,
 		"outDir": "types",
 		"rootDir": "source",
 		"skipLibCheck": true,

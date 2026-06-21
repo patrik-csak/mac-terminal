@@ -20,23 +20,19 @@
     "types"
   ],
   "scripts": {
-    "_eslint": "eslint --cache --cache-strategy=content",
-    "_knip": "knip --cache",
-    "_prettier": "prettier --cache .",
-    "_typescript": "tsgo",
-    "build": "npm run _typescript",
-    "format:check": "npm run _prettier -- --check",
-    "format:fix": "npm run _prettier -- --write",
-    "lint:check": "npm run _eslint",
-    "lint:fix": "npm run _eslint -- --fix",
+    "prebuild": "rm -fr types",
+    "build": "tsc",
+    "format:check": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "lint:check": "eslint",
+    "lint:fix": "eslint --fix",
     "prepack": "npm run build",
     "quality:check": "npm run lint:check && npm run format:check && npm run types:check && npm run unused:check",
-    "quality:fix": "npm run lint:fix && npm run format:fix && npm run unused:fix",
+    "quality:fix": "npm run lint:fix && npm run format:fix",
     "test": "node --experimental-test-module-mocks --test",
-    "test:coverage": "node --experimental-test-coverage --experimental-test-module-mocks --test",
-    "types:check": "npm run _typescript -- --noEmit",
-    "unused:check": "npm run _knip",
-    "unused:fix": "npm run _knip -- --fix"
+    "test:coverage": "npm run test -- --experimental-test-coverage",
+    "types:check": "tsc --noEmit",
+    "unused:check": "knip"
   },
   "dependencies": {
     "bplist-parser": "^0.3.2",
@@ -45,12 +41,12 @@
   },
   "devDependencies": {
     "@e18e/eslint-plugin": "^0.3.0",
-    "@typescript/native-preview": "^7.0.0-dev.20260421.2",
     "eslint": "^10.0.3",
     "eslint-plugin-package-json": "^0.91.0",
     "eslint-plugin-perfectionist": "^5.8.0",
     "knip": "^6.4.0",
     "prettier": "^3.5.3",
+    "typescript": "^6.0.3",
     "xo": "^2.0.2"
   },
   "engines": {
