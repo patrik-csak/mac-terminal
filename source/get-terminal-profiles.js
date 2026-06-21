@@ -1,5 +1,5 @@
-import {parseFile as parsePlistFile} from 'bplist-parser';
 import os from 'node:os';
+import {parseFile as parsePlistFile} from 'bplist-parser';
 
 /**
  * @returns {Promise<string[]>} - List of installed profiles

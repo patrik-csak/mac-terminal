@@ -29,11 +29,10 @@ describe('getTerminalProfiles', () => {
 		bplistParser.parseFile.mock.mockImplementation(async () => [
 			{
 				'Window Settings': {
-					/* eslint-disable perfectionist/sort-objects */
 					'Profile 10': {},
 					'Profile 2': {},
 					'Profile 1': {},
-					/* eslint-enable */
+
 				},
 			},
 		]);
