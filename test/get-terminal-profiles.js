@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {Buffer} from 'node:buffer';
 import {
 	beforeEach,
 	describe,
@@ -9,20 +10,24 @@ import {
 const os = {homedir: mock.fn(() => '/home')};
 mock.module('node:os', {defaultExport: os, namedExports: os});
 
-const bplistParser = {parseFile: mock.fn()};
-mock.module('bplist-parser', {namedExports: bplistParser});
+const fileSystem = {readFile: mock.fn()};
+mock.module('node:fs/promises', {namedExports: fileSystem});
+
+const plist = {parse: mock.fn()};
+mock.module('plist', {namedExports: plist});
 
 const {default: getTerminalProfiles} = await import('../source/get-terminal-profiles.js');
 
 describe('getTerminalProfiles', () => {
 	beforeEach(() => {
-		bplistParser.parseFile.mock.resetCalls();
+		fileSystem.readFile.mock.resetCalls();
+		plist.parse.mock.resetCalls();
 	});
 
 	it('returns sorted profile names', async () => {
-		bplistParser.parseFile.mock.mockImplementation(async () => [
-			{'Window Settings': {'Dark Profile': {}, 'Light Profile': {}}},
-		]);
+		plist.parse.mock.mockImplementation(() => (
+			{'Window Settings': {'Dark Profile': {}, 'Light Profile': {}}}
+		));
 
 		const profiles = await getTerminalProfiles();
 
@@ -30,15 +35,15 @@ describe('getTerminalProfiles', () => {
 	});
 
 	it('sorts numerically', async () => {
-		bplistParser.parseFile.mock.mockImplementation(async () => [
+		plist.parse.mock.mockImplementation(() => (
 			{
 				'Window Settings': {
 					'Profile 10': {},
 					'Profile 2': {},
 					'Profile 1': {},
 				},
-			},
-		]);
+			}
+		));
 
 		const profiles = await getTerminalProfiles();
 
@@ -46,15 +51,23 @@ describe('getTerminalProfiles', () => {
 	});
 
 	it('reads the correct plist path', async () => {
-		bplistParser.parseFile.mock.mockImplementation(async () => [
-			{'Window Settings': {}},
-		]);
+		plist.parse.mock.mockImplementation(() => ({'Window Settings': {}}));
 
 		await getTerminalProfiles();
 
 		assert.equal(
-			bplistParser.parseFile.mock.calls[0].arguments[0],
+			fileSystem.readFile.mock.calls[0].arguments[0],
 			'/home/Library/Preferences/com.apple.Terminal.plist',
 		);
+	});
+
+	it('parses the plist contents', async () => {
+		const plistContents = Buffer.from('plist contents');
+		fileSystem.readFile.mock.mockImplementation(async () => plistContents);
+		plist.parse.mock.mockImplementation(() => ({'Window Settings': {}}));
+
+		await getTerminalProfiles();
+
+		assert.equal(plist.parse.mock.calls[0].arguments[0], plistContents);
 	});
 });

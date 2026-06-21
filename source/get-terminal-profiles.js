@@ -1,5 +1,6 @@
+import {readFile} from 'node:fs/promises';
 import os from 'node:os';
-import {parseFile as parsePlistFile} from 'bplist-parser';
+import {parse as parsePlist} from 'plist';
 
 /**
 Get the list of installed Terminal profiles
@@ -8,8 +9,8 @@ Get the list of installed Terminal profiles
  */
 export default async function getTerminalProfiles() {
 	const terminalPlistPath = `${os.homedir()}/Library/Preferences/com.apple.Terminal.plist`;
-	const terminalPreferences = await parsePlistFile(terminalPlistPath);
-	const profiles = Object.keys(terminalPreferences[0]['Window Settings']);
+	const terminalPreferences = parsePlist(await readFile(terminalPlistPath));
+	const profiles = Object.keys(terminalPreferences['Window Settings']);
 
 	return profiles
 		.toSorted(new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'}).compare);

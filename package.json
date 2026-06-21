@@ -33,7 +33,7 @@
     "unused:check": "knip"
   },
   "dependencies": {
-    "bplist-parser": "^0.3.2",
+    "plist": "^5.0.0",
     "run-applescript": "^7.0.0"
   },
   "devDependencies": {
