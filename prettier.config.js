@@ -1,6 +1,6 @@
 /**
- * @see {@link https://github.com/xojs/xo#prettier}
- * @type {import('prettier').Options}
+ @see {@link https://github.com/xojs/xo#prettier}
+ @type {import('prettier').Options}
  */
 const config = {
 	bracketSpacing: false,

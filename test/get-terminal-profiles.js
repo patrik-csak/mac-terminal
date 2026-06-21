@@ -32,7 +32,6 @@ describe('getTerminalProfiles', () => {
 					'Profile 10': {},
 					'Profile 2': {},
 					'Profile 1': {},
-
 				},
 			},
 		]);

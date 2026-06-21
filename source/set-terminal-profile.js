@@ -4,14 +4,14 @@ import isTerminalRunning from './is-terminal-running.js';
 import setTerminalDefaultProfile from './set-terminal-default-profile.js';
 
 /**
- * Update all open Terminal tabs to use the given profile
- *
- * @param {object} parameters
- * @param {string} parameters.profile - Profile name, e.g. 'Clear
- *                                      Dark'
- * @param {boolean} [parameters.setDefault] - Whether to also make the
- *                                            profile the default
- * @return {Promise<void>}
+ Update all open Terminal tabs to use the given profile
+ 
+ @param {object} parameters
+ @param {string} parameters.profile - Profile name, e.g. 'Clear
+ Dark'
+ @param {boolean} [parameters.setDefault] - Whether to also make the
+ profile the default
+ @returns {Promise<void>}
  */
 export default async function setTerminalProfile({profile, setDefault}) {
 	await assertTerminalProfile(profile);

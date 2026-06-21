@@ -7,10 +7,10 @@ import isTerminalRunning from './is-terminal-running.js';
 const execute = promisify(execFile);
 
 /**
- * Set the default Terminal profile for new windows/tabs
- *
- * @param {string} profile - Profile name, e.g. 'Clear Dark'
- * @return {Promise<void>}
+ Set the default Terminal profile for new windows/tabs
+
+ @param {string} profile - Profile name, e.g. 'Clear Dark'
+ @returns {Promise<void>}
  */
 export default async function setTerminalDefaultProfile(profile) {
 	await assertTerminalProfile(profile);

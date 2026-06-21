@@ -6,7 +6,7 @@ import isTerminalRunning from './is-terminal-running.js';
 const execute = promisify(execFile);
 
 /**
- * @returns {Promise<string>} - The name of the default profile
+ @returns {Promise<string>} - The name of the default profile
  */
 export default async function getTerminalDefaultProfile() {
 	if (await isTerminalRunning()) {
