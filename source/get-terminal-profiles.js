@@ -2,7 +2,9 @@ import os from 'node:os';
 import {parseFile as parsePlistFile} from 'bplist-parser';
 
 /**
- @returns {Promise<string[]>} - List of installed profiles
+Get the list of installed Terminal profiles
+
+ @returns {Promise<string[]>} - List of installed Terminal profiles
  */
 export default async function getTerminalProfiles() {
 	const terminalPlistPath = `${os.homedir()}/Library/Preferences/com.apple.Terminal.plist`;

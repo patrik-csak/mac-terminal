@@ -5,8 +5,8 @@ import setTerminalDefaultProfile from './set-terminal-default-profile.js';
 
 /**
  Update all open Terminal tabs to use the given profile
- 
- @param {object} parameters
+
+ @param {object} parameters // eslint-disable-line jsdoc-require-param-description
  @param {string} parameters.profile - Profile name, e.g. 'Clear
  Dark'
  @param {boolean} [parameters.setDefault] - Whether to also make the
