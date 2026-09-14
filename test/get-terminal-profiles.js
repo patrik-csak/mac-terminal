@@ -1,40 +1,43 @@
-import assert from 'node:assert/strict';
 import {Buffer} from 'node:buffer';
-import {
-	beforeEach,
-	describe,
-	it,
-	mock,
-} from 'node:test';
+import {suite, test} from 'node:test';
 
-const os = {homedir: mock.fn(() => '/home')};
-mock.module('node:os', {defaultExport: os, namedExports: os});
+/**
+@param {import('node:test').TestContext} t
+*/
+async function setup(t) {
+	const os = {homedir: t.mock.fn(() => '/home')};
+	t.mock.module('node:os', {exports: {default: os, ...os}});
 
-const fileSystem = {readFile: mock.fn()};
-mock.module('node:fs/promises', {namedExports: fileSystem});
+	const fileSystem = {readFile: t.mock.fn()};
+	t.mock.module('node:fs/promises', {exports: fileSystem});
 
-const plist = {parse: mock.fn()};
-mock.module('plist', {namedExports: plist});
+	const plist = {parse: t.mock.fn()};
+	t.mock.module('plist', {exports: plist});
 
-const {default: getTerminalProfiles} = await import('../source/get-terminal-profiles.js');
+	// https://github.com/nodejs/node/issues/59163
+	const {default: getTerminalProfiles} = await import(`../source/get-terminal-profiles.js?test=${t.name}`);
 
-describe('getTerminalProfiles', () => {
-	beforeEach(() => {
-		fileSystem.readFile.mock.resetCalls();
-		plist.parse.mock.resetCalls();
-	});
+	return {
+		getTerminalProfiles, os, fileSystem, plist,
+	};
+}
 
-	it('returns sorted profile names', async () => {
+suite('getTerminalProfiles', () => {
+	test('returns sorted profile names', async t => {
+		const {getTerminalProfiles, plist} = await setup(t);
+
 		plist.parse.mock.mockImplementation(() => (
 			{'Window Settings': {'Dark Profile': {}, 'Light Profile': {}}}
 		));
 
 		const profiles = await getTerminalProfiles();
 
-		assert.deepEqual(profiles, ['Dark Profile', 'Light Profile']);
+		t.assert.deepStrictEqual(profiles, ['Dark Profile', 'Light Profile']);
 	});
 
-	it('sorts numerically', async () => {
+	test('sorts numerically', async t => {
+		const {getTerminalProfiles, plist} = await setup(t);
+
 		plist.parse.mock.mockImplementation(() => (
 			{
 				'Window Settings': {
@@ -47,27 +50,31 @@ describe('getTerminalProfiles', () => {
 
 		const profiles = await getTerminalProfiles();
 
-		assert.deepEqual(profiles, ['Profile 1', 'Profile 2', 'Profile 10']);
+		t.assert.deepStrictEqual(profiles, ['Profile 1', 'Profile 2', 'Profile 10']);
 	});
 
-	it('reads the correct plist path', async () => {
+	test('reads the correct plist path', async t => {
+		const {getTerminalProfiles, fileSystem, plist} = await setup(t);
+
 		plist.parse.mock.mockImplementation(() => ({'Window Settings': {}}));
 
 		await getTerminalProfiles();
 
-		assert.equal(
+		t.assert.strictEqual(
 			fileSystem.readFile.mock.calls[0].arguments[0],
 			'/home/Library/Preferences/com.apple.Terminal.plist',
 		);
 	});
 
-	it('parses the plist contents', async () => {
+	test('parses the plist contents', async t => {
+		const {getTerminalProfiles, fileSystem, plist} = await setup(t);
+
 		const plistContents = Buffer.from('plist contents');
 		fileSystem.readFile.mock.mockImplementation(async () => plistContents);
 		plist.parse.mock.mockImplementation(() => ({'Window Settings': {}}));
 
 		await getTerminalProfiles();
 
-		assert.equal(plist.parse.mock.calls[0].arguments[0], plistContents);
+		t.assert.strictEqual(plist.parse.mock.calls[0].arguments[0], plistContents);
 	});
 });

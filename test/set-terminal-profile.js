@@ -1,47 +1,46 @@
-import assert from 'node:assert/strict';
-import {
-	beforeEach,
-	describe,
-	it,
-	mock,
-} from 'node:test';
+import {suite, test} from 'node:test';
 
-const runAppleScript = mock.fn();
-mock.module('run-applescript', {namedExports: {runAppleScript}});
+/**
+@param {import('node:test').TestContext} t
+*/
+async function setup(t) {
+	const runAppleScript = t.mock.fn();
+	t.mock.module('run-applescript', {exports: {runAppleScript}});
 
-const assertTerminalProfile = mock.fn();
-mock.module('../source/assert-terminal-profile.js', {
-	defaultExport: assertTerminalProfile,
-});
-
-const isTerminalRunning = mock.fn();
-mock.module('../source/is-terminal-running.js', {
-	defaultExport: isTerminalRunning,
-});
-
-const setTerminalDefaultProfile = mock.fn();
-mock.module('../source/set-terminal-default-profile.js', {
-	defaultExport: setTerminalDefaultProfile,
-});
-
-const {default: setTerminalProfile} = await import('../source/set-terminal-profile.js');
-
-describe('setTerminalProfile', () => {
-	beforeEach(() => {
-		runAppleScript.mock.resetCalls();
-		assertTerminalProfile.mock.resetCalls();
-		isTerminalRunning.mock.resetCalls();
-		setTerminalDefaultProfile.mock.resetCalls();
+	const assertTerminalProfile = t.mock.fn();
+	t.mock.module('../source/assert-terminal-profile.js', {
+		exports: {default: assertTerminalProfile},
 	});
 
-	it('updates tabs via AppleScript when Terminal is running', async () => {
+	const isTerminalRunning = t.mock.fn();
+	t.mock.module('../source/is-terminal-running.js', {
+		exports: {default: isTerminalRunning},
+	});
+
+	const setTerminalDefaultProfile = t.mock.fn();
+	t.mock.module('../source/set-terminal-default-profile.js', {
+		exports: {default: setTerminalDefaultProfile},
+	});
+
+	// https://github.com/nodejs/node/issues/59163
+	const {default: setTerminalProfile} = await import(`../source/set-terminal-profile.js?test=${t.name}`);
+
+	return {
+		setTerminalProfile, runAppleScript, assertTerminalProfile, isTerminalRunning, setTerminalDefaultProfile,
+	};
+}
+
+suite('setTerminalProfile', () => {
+	test('updates tabs via AppleScript when Terminal is running', async t => {
+		const {setTerminalProfile, runAppleScript, assertTerminalProfile, isTerminalRunning} = await setup(t);
+
 		assertTerminalProfile.mock.mockImplementation(async () => undefined);
 		isTerminalRunning.mock.mockImplementation(async () => true);
 		runAppleScript.mock.mockImplementation(async () => undefined);
 
 		await setTerminalProfile({profile: 'Profile', setDefault: false});
 
-		assert.equal(
+		t.assert.strictEqual(
 			runAppleScript.mock.calls[0].arguments[0],
 			[
 				'tell application "Terminal"',
@@ -51,50 +50,58 @@ describe('setTerminalProfile', () => {
 		);
 	});
 
-	it('does not call AppleScript when Terminal is not running', async () => {
+	test('does not call AppleScript when Terminal isn\'t running', async t => {
+		const {setTerminalProfile, runAppleScript, assertTerminalProfile, isTerminalRunning} = await setup(t);
+
 		assertTerminalProfile.mock.mockImplementation(async () => undefined);
 		isTerminalRunning.mock.mockImplementation(async () => false);
 
 		await setTerminalProfile({profile: 'Profile', setDefault: false});
 
-		assert.equal(runAppleScript.mock.callCount(), 0);
+		t.assert.strictEqual(runAppleScript.mock.callCount(), 0);
 	});
 
-	it('sets default profile when setDefault is true', async () => {
+	test('sets default profile when setDefault is true', async t => {
+		const {setTerminalProfile, assertTerminalProfile, isTerminalRunning, setTerminalDefaultProfile} = await setup(t);
+
 		assertTerminalProfile.mock.mockImplementation(async () => undefined);
 		isTerminalRunning.mock.mockImplementation(async () => false);
 		setTerminalDefaultProfile.mock.mockImplementation(async () => undefined);
 
 		await setTerminalProfile({profile: 'Profile', setDefault: true});
 
-		assert.equal(setTerminalDefaultProfile.mock.callCount(), 1);
-		assert.equal(
+		t.assert.strictEqual(setTerminalDefaultProfile.mock.callCount(), 1);
+		t.assert.strictEqual(
 			setTerminalDefaultProfile.mock.calls[0].arguments[0],
 			'Profile',
 		);
 	});
 
-	it('does not set default profile when setDefault is falsy', async () => {
+	test('does not set default profile when setDefault is falsy', async t => {
+		const {setTerminalProfile, assertTerminalProfile, isTerminalRunning, setTerminalDefaultProfile} = await setup(t);
+
 		assertTerminalProfile.mock.mockImplementation(async () => undefined);
 		isTerminalRunning.mock.mockImplementation(async () => false);
 
 		await setTerminalProfile({profile: 'Profile', setDefault: false});
 
-		assert.equal(setTerminalDefaultProfile.mock.callCount(), 0);
+		t.assert.strictEqual(setTerminalDefaultProfile.mock.callCount(), 0);
 	});
 
-	it('rejects an invalid profile before updating Terminal', async () => {
+	test('rejects an invalid profile before updating Terminal', async t => {
+		const {setTerminalProfile, runAppleScript, assertTerminalProfile, isTerminalRunning, setTerminalDefaultProfile} = await setup(t);
+
 		const error = new Error('Expected string to be one of `["Profile"]`, got `Missing Profile`');
 		assertTerminalProfile.mock.mockImplementation(async () => {
 			throw error;
 		});
 
-		await assert.rejects(
+		await t.assert.rejects(
 			setTerminalProfile({profile: 'Missing Profile', setDefault: true}),
 			error,
 		);
-		assert.equal(isTerminalRunning.mock.callCount(), 0);
-		assert.equal(runAppleScript.mock.callCount(), 0);
-		assert.equal(setTerminalDefaultProfile.mock.callCount(), 0);
+		t.assert.strictEqual(isTerminalRunning.mock.callCount(), 0);
+		t.assert.strictEqual(runAppleScript.mock.callCount(), 0);
+		t.assert.strictEqual(setTerminalDefaultProfile.mock.callCount(), 0);
 	});
 });

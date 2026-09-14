@@ -1,41 +1,43 @@
-import assert from 'node:assert/strict';
-import {
-	beforeEach,
-	describe,
-	it,
-	mock,
-} from 'node:test';
+import {suite, test} from 'node:test';
 
-const childProcess = {execFile: mock.fn()};
-mock.module('node:child_process', {namedExports: childProcess});
+/**
+@param {import('node:test').TestContext} t
+*/
+async function setup(t) {
+	const childProcess = {execFile: t.mock.fn()};
+	t.mock.module('node:child_process', {exports: childProcess});
 
-const runAppleScript = mock.fn();
-mock.module('run-applescript', {namedExports: {runAppleScript}});
+	const runAppleScript = t.mock.fn();
+	t.mock.module('run-applescript', {exports: {runAppleScript}});
 
-const isTerminalRunning = mock.fn();
-mock.module('../source/is-terminal-running.js', {
-	defaultExport: isTerminalRunning,
-});
-
-const {default: getTerminalDefaultProfile} = await import('../source/get-terminal-default-profile.js');
-
-describe('getTerminalDefaultProfile', () => {
-	beforeEach(() => {
-		childProcess.execFile.mock.resetCalls();
-		runAppleScript.mock.resetCalls();
-		isTerminalRunning.mock.resetCalls();
+	const isTerminalRunning = t.mock.fn();
+	t.mock.module('../source/is-terminal-running.js', {
+		exports: {default: isTerminalRunning},
 	});
 
-	it('uses AppleScript when Terminal is running', async () => {
+	// https://github.com/nodejs/node/issues/59163
+	const {default: getTerminalDefaultProfile} = await import(`../source/get-terminal-default-profile.js?test=${t.name}`);
+
+	return {
+		getTerminalDefaultProfile, childProcess, runAppleScript, isTerminalRunning,
+	};
+}
+
+suite('getTerminalDefaultProfile', () => {
+	test('uses AppleScript when Terminal is running', async t => {
+		const {getTerminalDefaultProfile, runAppleScript, isTerminalRunning} = await setup(t);
+
 		isTerminalRunning.mock.mockImplementation(async () => true);
 		runAppleScript.mock.mockImplementation(async () => 'Profile');
 
 		const result = await getTerminalDefaultProfile();
 
-		assert.equal(result, 'Profile');
+		t.assert.strictEqual(result, 'Profile');
 	});
 
-	it('uses defaults command when Terminal is not running', async () => {
+	test('uses defaults command when Terminal isn\'t running', async t => {
+		const {getTerminalDefaultProfile, childProcess, isTerminalRunning} = await setup(t);
+
 		isTerminalRunning.mock.mockImplementation(async () => false);
 		childProcess.execFile.mock.mockImplementation((_command, _args, callback) => {
 			callback(null, {stderr: '', stdout: 'Profile\n'});
@@ -43,12 +45,12 @@ describe('getTerminalDefaultProfile', () => {
 
 		const result = await getTerminalDefaultProfile();
 
-		assert.equal(result, 'Profile');
-		assert.equal(childProcess.execFile.mock.callCount(), 1);
+		t.assert.strictEqual(result, 'Profile');
+		t.assert.strictEqual(childProcess.execFile.mock.callCount(), 1);
 
 		const [command, args] = childProcess.execFile.mock.calls[0].arguments;
-		assert.equal(command, 'defaults');
-		assert.deepEqual(args, [
+		t.assert.strictEqual(command, 'defaults');
+		t.assert.deepStrictEqual(args, [
 			'read',
 			'com.apple.Terminal',
 			'Default Window Settings',
