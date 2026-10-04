@@ -11,7 +11,7 @@ const execute = promisify(execFile);
 
  @param {string} profile - Profile name, e.g. 'Clear Dark'
  @returns {Promise<void>}
- */
+*/
 export default async function setTerminalDefaultProfile(profile) {
 	await assertTerminalProfile(profile);
 

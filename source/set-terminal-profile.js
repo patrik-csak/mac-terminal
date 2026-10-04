@@ -12,7 +12,7 @@ import setTerminalDefaultProfile from './set-terminal-default-profile.js';
  @param {boolean} [parameters.setDefault] - Whether to also make the
  profile the default
  @returns {Promise<void>}
- */
+*/
 export default async function setTerminalProfile({profile, setDefault}) {
 	await assertTerminalProfile(profile);
 

@@ -9,7 +9,7 @@ const execute = promisify(execFile);
  Get the current default Terminal profile
 
  @returns {Promise<string>} - The current default Terminal profile
- */
+*/
 export default async function getTerminalDefaultProfile() {
 	if (await isTerminalRunning()) {
 		return runAppleScript('tell application "Terminal" to get name of default settings');

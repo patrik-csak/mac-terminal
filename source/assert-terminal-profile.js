@@ -5,7 +5,7 @@ import getTerminalProfiles from './get-terminal-profiles.js';
 
  @param {string} profile - Terminal profile to validate
  @returns {Promise<void>}
- */
+*/
 export default async function assertTerminalProfile(profile) {
 	const profiles = await getTerminalProfiles();
 
