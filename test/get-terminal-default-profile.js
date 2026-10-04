@@ -5,14 +5,14 @@ import {suite, test} from 'node:test';
 */
 async function setup(t) {
 	const childProcess = {execFile: t.mock.fn()};
-	t.mock.module('node:child_process', {exports: childProcess});
+	t.mock.module('node:child_process', {namedExports: childProcess});
 
 	const runAppleScript = t.mock.fn();
-	t.mock.module('run-applescript', {exports: {runAppleScript}});
+	t.mock.module('run-applescript', {namedExports: {runAppleScript}});
 
 	const isTerminalRunning = t.mock.fn();
 	t.mock.module('../source/is-terminal-running.js', {
-		exports: {default: isTerminalRunning},
+		defaultExport: isTerminalRunning,
 	});
 
 	// https://github.com/nodejs/node/issues/59163

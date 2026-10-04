@@ -5,7 +5,7 @@ import {suite, test} from 'node:test';
 */
 async function setup(t) {
 	const childProcess = {execFile: t.mock.fn()};
-	t.mock.module('node:child_process', {exports: childProcess});
+	t.mock.module('node:child_process', {namedExports: childProcess});
 
 	// https://github.com/nodejs/node/issues/59163
 	const {default: isTerminalRunning} = await import(`../source/is-terminal-running.js?test=${t.name}`);

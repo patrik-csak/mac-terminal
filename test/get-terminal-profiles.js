@@ -6,13 +6,13 @@ import {suite, test} from 'node:test';
 */
 async function setup(t) {
 	const os = {homedir: t.mock.fn(() => '/home')};
-	t.mock.module('node:os', {exports: {default: os, ...os}});
+	t.mock.module('node:os', {defaultExport: os, namedExports: os});
 
 	const fileSystem = {readFile: t.mock.fn()};
-	t.mock.module('node:fs/promises', {exports: fileSystem});
+	t.mock.module('node:fs/promises', {namedExports: fileSystem});
 
 	const plist = {parse: t.mock.fn()};
-	t.mock.module('plist', {exports: plist});
+	t.mock.module('plist', {namedExports: plist});
 
 	// https://github.com/nodejs/node/issues/59163
 	const {default: getTerminalProfiles} = await import(`../source/get-terminal-profiles.js?test=${t.name}`);

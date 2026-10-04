@@ -5,21 +5,21 @@ import {suite, test} from 'node:test';
 */
 async function setup(t) {
 	const runAppleScript = t.mock.fn();
-	t.mock.module('run-applescript', {exports: {runAppleScript}});
+	t.mock.module('run-applescript', {namedExports: {runAppleScript}});
 
 	const assertTerminalProfile = t.mock.fn();
 	t.mock.module('../source/assert-terminal-profile.js', {
-		exports: {default: assertTerminalProfile},
+		defaultExport: assertTerminalProfile,
 	});
 
 	const isTerminalRunning = t.mock.fn();
 	t.mock.module('../source/is-terminal-running.js', {
-		exports: {default: isTerminalRunning},
+		defaultExport: isTerminalRunning,
 	});
 
 	const setTerminalDefaultProfile = t.mock.fn();
 	t.mock.module('../source/set-terminal-default-profile.js', {
-		exports: {default: setTerminalDefaultProfile},
+		defaultExport: setTerminalDefaultProfile,
 	});
 
 	// https://github.com/nodejs/node/issues/59163
