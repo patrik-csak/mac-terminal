@@ -28,15 +28,10 @@
   "scripts": {
     "prebuild": "rm -fr types",
     "build": "tsc",
-    "lint:check": "eslint",
-    "lint:fix": "eslint --fix",
+    "lint": "eslint && knip",
     "prepack": "npm run build",
-    "quality:check": "npm run types:check && npm run lint:check && npm run unused:check",
-    "quality:fix": "npm run lint:fix",
     "test": "node --experimental-test-module-mocks --test",
-    "test:coverage": "npm run test -- --experimental-test-coverage",
-    "types:check": "tsc --noEmit",
-    "unused:check": "knip"
+    "test:coverage": "node --run test -- --experimental-test-coverage"
   },
   "files": [
     "source",
