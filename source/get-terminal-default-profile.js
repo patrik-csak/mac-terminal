@@ -6,9 +6,9 @@ import isTerminalRunning from './is-terminal-running.js';
 const execute = promisify(execFile);
 
 /**
- Get the current default Terminal profile
+Get the current default Terminal profile
 
- @returns {Promise<string>} - The current default Terminal profile
+@returns {Promise<string>} - The current default Terminal profile
 */
 export default async function getTerminalDefaultProfile() {
 	if (await isTerminalRunning()) {

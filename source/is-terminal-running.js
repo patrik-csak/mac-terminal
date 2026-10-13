@@ -4,9 +4,9 @@ import {promisify} from 'node:util';
 const execute = promisify(execFile);
 
 /**
- Check if Terminal is currently running
+Check if Terminal is currently running
 
- @returns {Promise<boolean>} - Whether Terminal is currently running
+@returns {Promise<boolean>} - Whether Terminal is currently running
 */
 export default async function isTerminalRunning() {
 	try {
