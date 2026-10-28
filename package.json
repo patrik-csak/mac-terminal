@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "eslint": "^10.8.0",
-    "eslint-config-xo": "^6.0.0",
+    "eslint-config-xo": "^7.0.0",
     "knip": "^6.29.0",
     "typescript": "^6.0.3"
   },
